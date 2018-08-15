@@ -1,10 +1,19 @@
 function analyze(token) {
     document.getElementById("result").innerHTML = "Loading, please wait...";
-    var result = "<table><tr><th>Commit</th><th>Result</th></tr>";
     var http = new XMLHttpRequest();
     http.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            document.getElementById("result").innerHTML = this.responseText ;//+ "</table>";
+            var result = "<table><tr><th>Commit</th><th>Result</th></tr>";
+            var json = JSON.parse(this.responseText);
+            json.forEach(function(elem) {
+                var msg = elem.commit.message;
+                var subject = msg.split('\n')[0]
+                result += "<tr><td>" + msg + "</td><td>"
+                if (!checkRule4(subject))
+                    result += "Rule 4 ";
+                result += "</td></tr>";
+            });
+            document.getElementById("result").innerHTML = result + "</table>";
         }
     };
     http.open("GET", "request.php?author=" + document.getElementById("author").value + "&repo=" + document.getElementById("repo").value, true);
