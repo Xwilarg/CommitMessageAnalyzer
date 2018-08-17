@@ -8,7 +8,7 @@ function analyze(token) {
             checkRules(this.responseText);
         }
     };
-    http.open("GET", "getVerbs.php", true);
+    http.open("GET", "php/getVerbs.php", true);
     http.send();
 }
 
@@ -31,7 +31,7 @@ function getCommit(author, repo, page, verbs) {
                 var subject = msg.split('\n')[0];
                 var name = elem.commit.author.name;
                 result += "<tr><td>" + name + "</td><td>" + msg + "</td><td>"
-                if (!subject.match('Merge branch \'[a-zA-Z0-9_-]+\' of https:\/\/github.com\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+')) {
+                if (!subject.match("Merge branch[ 'a-zA-Z0-9_-]+ of https:\/\/github.com\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+")) {
                     if (!checkRule2(subject)) {
                         result += '<a href="https://chris.beams.io/posts/git-commit/#limit-50">Rule 2</a> ';
                         increaseBrokenRule(brokenRules, name);
@@ -62,7 +62,7 @@ function getCommit(author, repo, page, verbs) {
             }
         }
     };
-    http.open("GET", "request.php?author=" + author + "&repo=" + repo + "&page=" + page, true);
+    http.open("GET", "php/request.php?author=" + author + "&repo=" + repo + "&page=" + page, true);
     http.send();
 }
 
