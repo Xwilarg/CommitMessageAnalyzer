@@ -1,3 +1,3 @@
 <?php
-    echo(file_get_contents("verbs.dat"));
+    echo(file_get_contents("verbs.txt"));
 ?>
