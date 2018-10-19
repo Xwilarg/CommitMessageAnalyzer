@@ -6,9 +6,15 @@
         <script src="js/commit.js"></script>
     </head>
     <body>
-        Author name: <input type="text" id="author">
-        Repository name: <input type="text" id="repo"><br/>
-        <input type="button" onclick="analyze()" value="Analyze">
+        <form>
+            Author name: <input type="text" id="author">
+            Repository name: <input type="text" id="repo">
+            <select id="website">
+                <option value="github">GitHub</option>
+                <option value="gitlab">GitLab</option>
+            </select><br/>
+            <input type="button" onclick="analyze()" value="Analyze">
+        </form>
         <div id="result"></div>
     </body>
 </html>

@@ -1,8 +1,9 @@
-function analyze(token) {
+function analyze() {
     result = "";
     brokenRules = {};
     document.getElementById("result").innerHTML = "Loading, please wait...";
-    getCommit(document.getElementById("author").value, document.getElementById("repo").value, 1, this.responseText);
+    let e = document.getElementById("website");
+    getCommit(document.getElementById("author").value, document.getElementById("repo").value, e.options[e.selectedIndex].value);
 }
 
 function increaseBrokenRule(brokenRules, name) {
@@ -13,7 +14,7 @@ var intro = "<table><tr><th>Author</th><th>Commit</th><th>Result</th></tr>";
 var result = "";
 var brokenRules = {};
 
-function getCommit(author, repo, page, verbs) {
+function getCommit(author, repo, website) {
     var http = new XMLHttpRequest();
     http.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
@@ -47,6 +48,6 @@ function getCommit(author, repo, page, verbs) {
             document.getElementById("result").innerHTML = "<br/>" + brokenResults + "<br/>" + intro + result + "</table>";
         }
     };
-    http.open("GET", "php/request.php?author=" + author + "&repo=" + repo + "&page=" + page, true);
+    http.open("GET", "php/request.php?author=" + author + "&repo=" + repo + "&website=" + website, true);
     http.send();
 }

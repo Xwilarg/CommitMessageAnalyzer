@@ -11,16 +11,30 @@
     $verbs = explode(PHP_EOL, file_get_contents("verbs.txt"));
 
     $page = 1;
+    $isGithub = $_GET['website'] === "github";
+    $array = array();
+    $rules = array('checkRule1', 'checkRule2', 'checkRule3', 'checkRule4', 'checkRule5', 'checkRule6', 'checkRule7');
     do
     {
-        $commits = json_decode(file_get_contents('https://api.github.com/repos/' . $_GET['author'] . '/' . $_GET['repo'] . '/commits?access_token=' . $token . '&per_page=100&page=' . $page, false, $context));
-
-        $array = array();
-        $rules = array('checkRule1', 'checkRule2', 'checkRule3', 'checkRule4', 'checkRule5', 'checkRule6', 'checkRule7');
+        if ($isGithub)
+            $url = 'https://api.github.com/repos/' . $_GET['author'] . '/' . $_GET['repo'] . '/commits?access_token=' . $token . '&';
+        else
+            $url = 'https://gitlab.com/api/v4/projects/' . urlencode($_GET['author'] . '/' . $_GET['repo']) . '/repository/commits?';
+        $url .= "per_page=100&page=" . $page;
+        $commits = json_decode(file_get_contents($url, false, $context));
         foreach ($commits as $i) {
             $elem = json_decode(json_encode($i), true);
             $rule = array();
-            $commitMsg = $elem['commit']['message'];
+            if ($isGithub)
+            {
+                $commitMsg = $elem['commit']['message'];
+                $commitName = $elem['commit']['author']['name'];
+            }
+            else
+            {
+                $commitMsg = $elem['title'];
+                $commitName = $elem['author_name'];
+            }
             $subjectLine = explode(PHP_EOL, $commitMsg)[0];
             if (!preg_match("/Merge branch[ 'a-zA-Z0-9_-]+ of https:\/\/github.com\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+/", $subjectLine)) {
                 foreach ($rules as $r) {
@@ -29,7 +43,7 @@
             }
             else
                 array_push($rule, true, true, true, true, true, true, true);
-            array_push($array, array($elem['commit']['author']['name'], $commitMsg, $rule));
+            array_push($array, array($commitName, $commitMsg, $rule));
         }
         $page += 1;
     } while (count($commits) == 100);
