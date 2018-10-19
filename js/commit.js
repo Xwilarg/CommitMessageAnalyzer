@@ -23,19 +23,19 @@ function getCommit(author, repo, website) {
                 var name = elem[0];
                 result += "<tr><td>" + name + "</td><td>" + elem[1] + "</td><td>";
                 if (!elem[2][1]) {
-                    result += '<a href="https://chris.beams.io/posts/git-commit/#limit-50">Rule 2</a> ';
+                    result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#limit-50">Rule 2</a> ';
                     increaseBrokenRule(brokenRules, name);
                 }
                 if (!elem[2][2]) {
-                    result += '<a href="https://chris.beams.io/posts/git-commit/#capitalize">Rule 3</a> ';
+                    result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#capitalize">Rule 3</a> ';
                     increaseBrokenRule(brokenRules, name);
                 }
                 if (!elem[2][3]) {
-                    result += '<a href="https://chris.beams.io/posts/git-commit/#end">Rule 4</a> ';
+                    result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#end">Rule 4</a> ';
                     increaseBrokenRule(brokenRules, name);
                 }
                 if (!elem[2][4]) {
-                    result += '<a href="https://chris.beams.io/posts/git-commit/#imperative">Rule 5</a> ';
+                    result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#imperative">Rule 5</a> ';
                     increaseBrokenRule(brokenRules, name);
                 }
                 result = result.replace(new RegExp('\n', 'g'), '<br/>');
