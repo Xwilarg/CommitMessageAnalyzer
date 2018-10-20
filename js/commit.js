@@ -26,7 +26,8 @@ function getCommit(author, repo, website) {
     var http = new XMLHttpRequest();
     http.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            var json = JSON.parse(this.responseText);
+            let tmpJson = JSON.parse(this.responseText);
+            let json = tmpJson[0];
             json.forEach(function(elem) {
                 addName(elem[2], elem[0]);
             });
@@ -62,6 +63,8 @@ function getCommit(author, repo, website) {
             for (var key in brokenRules) {
                 brokenResults += key + ": x" + brokenRules[key] + "<br/>";
             }
+            if (!tmpJson[1])
+                result += "<strong>Warning: Only the 500 firsts commits were analysed.</strong>";
             document.getElementById("result").innerHTML = "<br/>" + brokenResults + "<br/>" + intro + result + "</table>";
         }
     };

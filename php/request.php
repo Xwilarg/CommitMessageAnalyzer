@@ -49,9 +49,9 @@
             array_push($array, array($commitName, $commitMsg, $commitEmail, $rule));
         }
         $page += 1;
-    } while (count($commits) == 100);
+    } while (count($commits) == 100 && $page <= 5);
 
-    echo(json_encode($array));
+    echo(json_encode([$array, $page <= 5]));
 
     function checkRule1() { // Separate subject from body with a blank line
         return (true);
