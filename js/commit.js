@@ -11,8 +11,8 @@ function increaseBrokenRule(brokenRules, name) {
 }
 
 function addName(mail, name) {
-    if (!mailToName.hasOwnProperty(mail))
-        mailToName.push({key: mail, value: {key: name, value: 1}});
+    if (!(mail in mailToName))
+        mailToName[mail] = { [name]: 1};
     else
         mailToName[mail][name] = (mailToName[mail][name] || 0) + 1;
 }
