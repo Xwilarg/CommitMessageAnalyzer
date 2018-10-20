@@ -29,11 +29,13 @@
             {
                 $commitMsg = $elem['commit']['message'];
                 $commitName = $elem['commit']['author']['name'];
+                $commitEmail = $elem['commit']['author']['email'];
             }
             else
             {
                 $commitMsg = $elem['title'];
                 $commitName = $elem['author_name'];
+                $commitEmail = $elem['author_email'];
             }
             $subjectLine = explode(PHP_EOL, $commitMsg)[0];
             if (!preg_match("/Merge branch[ 'a-zA-Z0-9_-]+ of https:\/\/github.com\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+/", $subjectLine)) {
@@ -43,7 +45,7 @@
             }
             else
                 array_push($rule, true, true, true, true, true, true, true);
-            array_push($array, array($commitName, $commitMsg, $rule));
+            array_push($array, array($commitName, $commitMsg, $commitEmail, $rule));
         }
         $page += 1;
     } while (count($commits) == 100);

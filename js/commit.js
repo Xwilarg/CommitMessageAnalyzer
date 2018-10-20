@@ -10,9 +10,17 @@ function increaseBrokenRule(brokenRules, name) {
     brokenRules[name] = (brokenRules[name] || 0) + 1;
 }
 
+function addName(mail, name) {
+    if (!mailToName.hasOwnProperty(mail))
+        mailToName.push({key: mail, value: {key: name, value: 1}});
+    else
+        mailToName[mail][name] = (mailToName[mail][name] || 0) + 1;
+}
+
 var intro = "<table><tr><th>Author</th><th>Commit</th><th>Result</th></tr>";
 var result = "";
 var brokenRules = {};
+var mailToName = [];
 
 function getCommit(author, repo, website) {
     var http = new XMLHttpRequest();
@@ -20,21 +28,25 @@ function getCommit(author, repo, website) {
         if (this.readyState == 4 && this.status == 200) {
             var json = JSON.parse(this.responseText);
             json.forEach(function(elem) {
+                addName(elem[2], elem[0]);
+            });
+            console.log(mailToName);
+            json.forEach(function(elem) {
                 var name = elem[0];
                 result += "<tr><td>" + name + "</td><td>" + elem[1] + "</td><td>";
-                if (!elem[2][1]) {
+                if (!elem[3][1]) {
                     result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#limit-50">Rule 2</a> ';
                     increaseBrokenRule(brokenRules, name);
                 }
-                if (!elem[2][2]) {
+                if (!elem[3][2]) {
                     result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#capitalize">Rule 3</a> ';
                     increaseBrokenRule(brokenRules, name);
                 }
-                if (!elem[2][3]) {
+                if (!elem[3][3]) {
                     result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#end">Rule 4</a> ';
                     increaseBrokenRule(brokenRules, name);
                 }
-                if (!elem[2][4]) {
+                if (!elem[3][4]) {
                     result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#imperative">Rule 5</a> ';
                     increaseBrokenRule(brokenRules, name);
                 }
