@@ -30,9 +30,14 @@ function getCommit(author, repo, website) {
             json.forEach(function(elem) {
                 addName(elem[2], elem[0]);
             });
-            console.log(mailToName);
+            mailToName.forEach(function(elem) {
+                elem.sort(function(a, b) {
+                    if (a > b) return 1;
+                    else return -1;
+                })
+            });
             json.forEach(function(elem) {
-                var name = elem[0];
+                var name = Object.keys(mailToName[elem[2]])[0];
                 result += "<tr><td>" + name + "</td><td>" + elem[1] + "</td><td>";
                 if (!elem[3][1]) {
                     result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#limit-50">Rule 2</a> ';

@@ -38,7 +38,8 @@
                 $commitEmail = $elem['author_email'];
             }
             $subjectLine = explode(PHP_EOL, $commitMsg)[0];
-            if (!preg_match("/Merge branch[ 'a-zA-Z0-9_-]+ of https:\/\/github.com\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+/", $subjectLine)) {
+            if (!preg_match("/Merge branch[ 'a-zA-Z0-9_-]+ of https:\/\/github.com\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+/", $subjectLine)
+            && !preg_match("/Merge [ 'a-zA-Z0-9_-]+ #[0-9]+ from [ 'a-zA-Z0-9_-]+\/[ 'a-zA-Z0-9_-]+/", $subjectLine)) {
                 foreach ($rules as $r) {
                     array_push($rule, call_user_func($r, $subjectLine, $verbs));
                 }
