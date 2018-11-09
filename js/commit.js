@@ -2,8 +2,7 @@ function analyze() {
     result = "";
     brokenRules = {};
     document.getElementById("result").innerHTML = "Loading, please wait...";
-    let e = document.getElementById("website");
-    getCommit(document.getElementById("author").value, document.getElementById("repo").value, e.options[e.selectedIndex].value);
+    getCommit(document.getElementById("url").value);
 }
 
 function increaseBrokenRule(brokenRules, name) {
@@ -22,7 +21,11 @@ var result = "";
 var brokenRules = {};
 var mailToName = [];
 
-function getCommit(author, repo, website) {
+function getCommit(url) {
+    var regex = /http[s]?:\/\/(github|gitlab).com\/([ 'a-zA-Z0-9_-]+)\/([ 'a-zA-Z0-9_-]+)/.exec(url);
+    var website = regex[1];
+    var author = regex[2];
+    var repo = regex[3];
     var http = new XMLHttpRequest();
     http.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
