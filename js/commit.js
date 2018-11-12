@@ -16,6 +16,27 @@ function addName(mail, name) {
         mailToName[mail][name] = (mailToName[mail][name] || 0) + 1;
 }
 
+function drawChart()
+{
+    let array = new Array();
+    array.push(new Array());
+    array[0].push("Names");
+    array[0].push("Errors");
+    let i = 1;
+    for (var key in brokenRules) {
+        array.push(new Array());
+        array[i].push(key);
+        array[i].push(brokenRules[key]);
+        i++;
+    }
+    let data = google.visualization.arrayToDataTable(array);
+    let options = {
+        title: "Error per members"
+    };
+    let chart = new google.visualization.PieChart(document.getElementById("errorChart"));
+    chart.draw(data, options);
+}
+
 var intro = "<table><tr><th>Author</th><th>Commit</th><th>Result</th></tr>";
 var result = "";
 var brokenRules = {};
@@ -62,13 +83,13 @@ function getCommit(url) {
                 result = result.replace(new RegExp('\n', 'g'), '<br/>');
                 result += "</td></tr>";
             });
-            var brokenResults = "";
-            for (var key in brokenRules) {
-                brokenResults += key + ": x" + brokenRules[key] + "<br/>";
-            }
+            let brokenResults = "";
+            document.getElementById("result").innerHTML = '<div id="errorChart"></div>'
+            google.charts.load('current', {'packages':['corechart']});
+            google.charts.setOnLoadCallback(drawChart);
             if (!tmpJson[1])
                 result += "<strong>Warning: Only the 500 firsts commits were analysed.</strong>";
-            document.getElementById("result").innerHTML = "<br/>" + brokenResults + "<br/>" + intro + result + "</table>";
+            document.getElementById("result").innerHTML += "<br/>" + intro + result + "</table>";
         }
     };
     http.open("GET", "php/request.php?author=" + author + "&repo=" + repo + "&website=" + website, true);
