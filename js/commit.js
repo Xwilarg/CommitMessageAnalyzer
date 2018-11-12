@@ -63,20 +63,20 @@ function getCommit(url) {
             });
             json.forEach(function(elem) {
                 var name = Object.keys(mailToName[elem[2]])[0];
-                result += "<tr><td>" + name + "</td><td>" + elem[1] + "</td><td>";
-                if (!elem[3][1]) {
+                result += "<tr><td>" + name + '</td><td><a id="commitLink" href="' + elem[3] + '">' + elem[1] + '</a></td><td>';
+                if (!elem[4][1]) {
                     result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#limit-50">Rule 2</a> ';
                     increaseBrokenRule(brokenRules, name);
                 }
-                if (!elem[3][2]) {
+                if (!elem[4][2]) {
                     result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#capitalize">Rule 3</a> ';
                     increaseBrokenRule(brokenRules, name);
                 }
-                if (!elem[3][3]) {
+                if (!elem[4][3]) {
                     result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#end">Rule 4</a> ';
                     increaseBrokenRule(brokenRules, name);
                 }
-                if (!elem[3][4]) {
+                if (!elem[4][4]) {
                     result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#imperative">Rule 5</a> ';
                     increaseBrokenRule(brokenRules, name);
                 }

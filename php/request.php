@@ -30,12 +30,14 @@
                 $commitMsg = $elem['commit']['message'];
                 $commitName = $elem['commit']['author']['name'];
                 $commitEmail = $elem['commit']['author']['email'];
+                $commitUrl = $elem['html_url'];
             }
             else
             {
                 $commitMsg = $elem['title'];
                 $commitName = $elem['author_name'];
                 $commitEmail = $elem['author_email'];
+                $commitUrl = "https://gitlab.com/" . $_GET['author'] . '/' . $_GET['repo'] . "/commit/" . $elem['id'];
             }
             $subjectLine = explode(PHP_EOL, $commitMsg)[0];
             if (!preg_match("/Merge branch[ 'a-zA-Z0-9_-]+ of https:\/\/github.com\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+/", $subjectLine)
@@ -46,7 +48,7 @@
             }
             else
                 array_push($rule, true, true, true, true, true, true, true);
-            array_push($array, array($commitName, $commitMsg, $commitEmail, $rule));
+            array_push($array, array($commitName, $commitMsg, $commitEmail, $commitUrl, $rule));
         }
         $page += 1;
     } while (count($commits) == 100 && $page <= 5);
