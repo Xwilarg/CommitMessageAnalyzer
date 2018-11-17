@@ -1,7 +1,8 @@
+let getUrl = new URLSearchParams(window.location.search).get('url');
+if (getUrl !== null)
+    getCommit(getUrl);
+
 function analyze() {
-    result = "";
-    brokenRules = {};
-    document.getElementById("result").innerHTML = "Loading, please wait...";
     getCommit(document.getElementById("url").value);
 }
 
@@ -43,6 +44,9 @@ var brokenRules = {};
 var mailToName = [];
 
 function getCommit(url) {
+    result = "";
+    brokenRules = {};
+    document.getElementById("result").innerHTML = "Loading, please wait...";
     var regex = /http[s]?:\/\/(github|gitlab).com\/([ 'a-zA-Z0-9_-]+)\/([ 'a-zA-Z0-9_-]+)/.exec(url);
     var website = regex[1];
     var author = regex[2];
