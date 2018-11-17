@@ -87,7 +87,6 @@ function getCommit(url) {
                 result = result.replace(new RegExp('\n', 'g'), '<br/>');
                 result += "</td></tr>";
             });
-            let brokenResults = "";
             document.getElementById("result").innerHTML = '<div id="errorChart"></div>'
             google.charts.load('current', {'packages':['corechart']});
             google.charts.setOnLoadCallback(drawChart);
