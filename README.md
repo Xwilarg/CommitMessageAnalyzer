@@ -1,2 +1,2 @@
 # GitHubCommitMessageAnalyzer
-A website that analyze GitHub commit messages for a project
+A website that analyze GitHub/GitLab commit messages for a project
