@@ -58,7 +58,7 @@
     echo(json_encode([$array, $page <= 5]));
 
     function checkRule1($subjectLine, $verbs, $otherLines) { // Separate subject from body with a blank line
-        if (strlen($otherLines) === 0)
+        if (strlen($otherLines) === NULL)
             return (true);
         if (strlen($otherLines) < 2 || $otherLines[0] !== "" || $otherLines[1] === "")
             return (false);

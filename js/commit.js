@@ -89,6 +89,10 @@ function getCommit(url) {
                 json.forEach(function(elem) {
                     var name = Object.keys(mailToName[elem[2]])[0];
                     result += "<tr><td>" + name + '</td><td><a id="commitLink" href="' + elem[3] + '">' + escapeHtml(elem[1]) + '</a></td><td>';
+                    if (!elem[4][0]) {
+                        result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#separate">Rule 1</a> ';
+                        increaseBrokenRule(brokenRules, name);
+                    }
                     if (!elem[4][1]) {
                         result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#limit-50">Rule 2</a> ';
                         increaseBrokenRule(brokenRules, name);
@@ -103,6 +107,10 @@ function getCommit(url) {
                     }
                     if (!elem[4][4]) {
                         result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#imperative">Rule 5</a> ';
+                        increaseBrokenRule(brokenRules, name);
+                    }
+                    if (!elem[4][5]) {
+                        result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#wrap-72">Rule 6</a> ';
                         increaseBrokenRule(brokenRules, name);
                     }
                     result = result.replace(new RegExp('\n', 'g'), '<br/>');
