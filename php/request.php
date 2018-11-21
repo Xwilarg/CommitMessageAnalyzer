@@ -39,11 +39,13 @@
                 $commitEmail = $elem['author_email'];
                 $commitUrl = "https://gitlab.com/" . $_GET['author'] . '/' . $_GET['repo'] . "/commit/" . $elem['id'];
             }
-            $subjectLine = explode(PHP_EOL, $commitMsg)[0];
+            $lines = explode(PHP_EOL, $commitMsg);
+            $subjectLine = $lines[0];
+            $otherLines = array_slice($lines, 1);
             if (!preg_match("/Merge branch[ 'a-zA-Z0-9_-]+ of https:\/\/github.com\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+/", $subjectLine)
             && !preg_match("/Merge [ 'a-zA-Z0-9_-]+ #[0-9]+ from [ 'a-zA-Z0-9_-]+\/[ 'a-zA-Z0-9_-]+/", $subjectLine)) {
                 foreach ($rules as $r) {
-                    array_push($rule, call_user_func($r, $subjectLine, $verbs));
+                    array_push($rule, call_user_func($r, $subjectLine, $verbs, $otherLines));
                 }
             }
             else
@@ -55,7 +57,11 @@
 
     echo(json_encode([$array, $page <= 5]));
 
-    function checkRule1() { // Separate subject from body with a blank line
+    function checkRule1($subjectLine, $verbs, $otherLines) { // Separate subject from body with a blank line
+        if (strlen($otherLines) === 0)
+            return (true);
+        if (strlen($otherLines) < 2 || $otherLines[0] !== "" || $otherLines[1] === "")
+            return (false);
         return (true);
     }
 
@@ -84,7 +90,10 @@
         return (false);
     }
 
-    function checkRule6() { // Wrap the body at 72 characters
+    function checkRule6($subjectLine, $verbs, $otherLines) { // Wrap the body at 72 characters
+        foreach ($otherLines as $line)
+            if (strlen($line) > 72)
+                return (false);
         return (true);
     }
     
