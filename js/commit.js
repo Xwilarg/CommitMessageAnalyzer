@@ -49,10 +49,15 @@ function displayError(message) {
     htmlElement.innerHTML = message;
 }
 
+function escapeHtml(sentence) {
+    return sentence.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
 function getCommit(url) {
     result = "";
     brokenRules = {};
     var resultElement = document.getElementsByClassName("result")[0];
+    resultElement.className = "result";
     resultElement.innerHTML = "Loading, please wait...";
     var regex = /http[s]?:\/\/(github|gitlab).com\/([ 'a-zA-Z0-9_-]+)\/([ 'a-zA-Z0-9_-]+)/.exec(url);
     if (regex == null || regex.length != 4) {
@@ -83,7 +88,8 @@ function getCommit(url) {
                 });
                 json.forEach(function(elem) {
                     var name = Object.keys(mailToName[elem[2]])[0];
-                    result += "<tr><td>" + name + '</td><td><a id="commitLink" href="' + elem[3] + '">' + elem[1] + '</a></td><td>';
+                    console.log(escapeHtml(elem[1]));
+                    result += "<tr><td>" + name + '</td><td><a id="commitLink" href="' + elem[3] + '">' + escapeHtml(elem[1]) + '</a></td><td>';
                     if (!elem[4][1]) {
                         result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#limit-50">Rule 2</a> ';
                         increaseBrokenRule(brokenRules, name);
