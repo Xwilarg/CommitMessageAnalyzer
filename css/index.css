@@ -66,3 +66,9 @@ input {
 .error {
     background-color: #ffa6a5;
 }
+
+.github {
+    display: inline-block;
+    text-align: right;
+    margin-left: auto;
+}
