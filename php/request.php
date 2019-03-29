@@ -50,6 +50,7 @@
                 $commitEmail = $elem['commit']['author']['email'];
                 $commitUrl = $elem['html_url'];
                 $authorUrl = $elem['author']['html_url'];
+                $dateTime = $elem['commit']['author']['date'];
             }
             else
             {
@@ -58,7 +59,10 @@
                 $commitEmail = $elem['author_email'];
                 $commitUrl = $http . $domaineName . "/" . $author . '/' . $repo . "/commit/" . $elem['id'];
                 $authorUrl = $http . $domaineName . "/" . $author;
+                $dateTime = $elem['committed_date'];
             }
+            preg_match('/^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})/', $dateTime, $matches);
+            $dateTime = $matches[1] . '/' . $matches[2] . '/' . $matches[3] . ' ' . $matches[4] . ':' . $matches[5] . ':' . $matches[6];
             if (array_key_exists($commitEmail, $mailToName)) {
                 if (array_key_exists($commitName, $mailToName[$commitEmail])) {
                     $mailToName[$commitEmail][$commitName]++;
@@ -80,14 +84,14 @@
             }
             else
                 array_push($rule, true, true, true, true, true, true, true);
-            array_push($array, array($commitEmail, preg_replace($patterns, $replacements, $commitMsg), $commitUrl, $authorUrl, $rule));
+            array_push($array, array($commitEmail, $dateTime, preg_replace($patterns, $replacements, $commitMsg), $commitUrl, $authorUrl, $rule));
         }
         $page += 1;
     } while (count($commits) == 100 && $page <= 5);
 
     $finalArray = array();
     foreach ($array as $i) {
-        array_push($finalArray, array(key($mailToName[$i[0]]), $i[1], $i[2], $i[3], $i[4]));
+        array_push($finalArray, array(key($mailToName[$i[0]]), $i[1], $i[2], $i[3], $i[4], $i[5]));
     }
 
     echo(json_encode([$finalArray, $page <= 5]));

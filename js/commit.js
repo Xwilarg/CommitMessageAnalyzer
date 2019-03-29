@@ -31,7 +31,7 @@ function drawChart()
     chart.draw(data, options);
 }
 
-var intro = "<table><tr><th>Author</th><th>Commit</th><th>Result</th></tr>";
+var intro = "<table><tr><th>Date time (UTC)</th><th>Author</th><th>Commit</th><th>Result</th></tr>";
 var result = "";
 var brokenRules = {};
 var mailToName = [];
@@ -61,28 +61,28 @@ function getCommit(url) {
                 }
                 json.forEach(function(elem) {
                     let name = elem[0];
-                    result += "<tr><td>" + '<a id="commitLink" href="' + elem[3] + '">' + name + '</td><td><a id="commitLink" href="' + elem[2] + '"><nav id="message">' + elem[1] + '</nav></a></td><td>';
-                    if (!elem[4][0]) {
+                    result += "<tr><td>" + elem[1] + "</td><td>" + '<a id="commitLink" href="' + elem[4] + '">' + name + '</td><td><a id="commitLink" href="' + elem[3] + '"><nav id="message">' + elem[2] + '</nav></a></td><td>';
+                    if (!elem[5][0]) {
                         result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#separate">Rule 1</a> ';
                         increaseBrokenRule(brokenRules, name);
                     }
-                    if (!elem[4][1]) {
+                    if (!elem[5][1]) {
                         result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#limit-50">Rule 2</a> ';
                         increaseBrokenRule(brokenRules, name);
                     }
-                    if (!elem[4][2]) {
+                    if (!elem[5][2]) {
                         result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#capitalize">Rule 3</a> ';
                         increaseBrokenRule(brokenRules, name);
                     }
-                    if (!elem[4][3]) {
+                    if (!elem[5][3]) {
                         result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#end">Rule 4</a> ';
                         increaseBrokenRule(brokenRules, name);
                     }
-                    if (!elem[4][4]) {
+                    if (!elem[5][4]) {
                         result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#imperative">Rule 5</a> ';
                         increaseBrokenRule(brokenRules, name);
                     }
-                    if (!elem[4][5]) {
+                    if (!elem[5][5]) {
                         result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#wrap-72">Rule 6</a> ';
                         increaseBrokenRule(brokenRules, name);
                     }
