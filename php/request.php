@@ -13,6 +13,11 @@
     $page = 1;
     $isGithub = $_GET['website'] === "github";
     $array = array();
+    $mailToName = array();
+    $patterns = array();
+    $replacements = array();
+    array_push($patterns, '/</', '/>/');
+    array_push($replacements, '&lt;', '&gt;');
     $rules = array('checkRule1', 'checkRule2', 'checkRule3', 'checkRule4', 'checkRule5', 'checkRule6', 'checkRule7');
     do
     {
@@ -39,6 +44,15 @@
                 $commitEmail = $elem['author_email'];
                 $commitUrl = "https://gitlab.com/" . $_GET['author'] . '/' . $_GET['repo'] . "/commit/" . $elem['id'];
             }
+            if (array_key_exists($commitEmail, $mailToName)) {
+                if (array_key_exists($commitName, $mailToName[$commitEmail])) {
+                    $mailToName[$commitEmail][$commitName]++;
+                } else {
+                    $mailToName[$commitEmail][$commitName] = 1;
+                }
+            } else {
+                $mailToName[$commitEmail] = array();
+            }
             $lines = explode(PHP_EOL, $commitMsg);
             $subjectLine = $lines[0];
             $otherLines = array_slice($lines, 1);
@@ -50,12 +64,17 @@
             }
             else
                 array_push($rule, true, true, true, true, true, true, true);
-            array_push($array, array($commitName, $commitMsg, $commitEmail, $commitUrl, $rule));
+            array_push($array, array($commitEmail, preg_replace($patterns, $replacements, $commitMsg), $commitUrl, $rule));
         }
         $page += 1;
     } while (count($commits) == 100 && $page <= 5);
 
-    echo(json_encode([$array, $page <= 5]));
+    $finalArray = array();
+    foreach ($array as $i) {
+        array_push($finalArray, array(key($mailToName[$i[0]]), $i[1], $i[2], $i[3]));
+    }
+
+    echo(json_encode([$finalArray, $page <= 5]));
 
     function checkRule1($subjectLine, $verbs, $otherLines) { // Separate subject from body with a blank line
         if (count($otherLines) == 0)

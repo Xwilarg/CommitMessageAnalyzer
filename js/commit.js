@@ -10,13 +10,6 @@ function increaseBrokenRule(brokenRules, name) {
     brokenRules[name] = (brokenRules[name] || 0) + 1;
 }
 
-function addName(mail, name) {
-    if (!(mail in mailToName))
-        mailToName[mail] = { [name]: 1};
-    else
-        mailToName[mail][name] = (mailToName[mail][name] || 0) + 1;
-}
-
 function drawChart()
 {
     let array = new Array();
@@ -49,25 +42,22 @@ function displayError(message) {
     htmlElement.innerHTML = message;
 }
 
-function escapeHtml(sentence) {
-    return sentence.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-}
 
 function getCommit(url) {
     result = "";
     brokenRules = {};
-    var resultElement = document.getElementsByClassName("result")[0];
+    let resultElement = document.getElementsByClassName("result")[0];
     resultElement.className = "result";
     resultElement.innerHTML = "Loading, please wait...";
-    var regex = /http[s]?:\/\/(github|gitlab).com\/([ 'a-zA-Z0-9_-]+)\/([ 'a-zA-Z0-9_-]+)/.exec(url);
+    let regex = /http[s]?:\/\/(github|gitlab).com\/([ 'a-zA-Z0-9_-]+)\/([ 'a-zA-Z0-9_-]+)/.exec(url);
     if (regex == null || regex.length != 4) {
         displayError("This isn't a valid GitHub/GitLab URL.");
         return;
     }
-    var website = regex[1];
-    var author = regex[2];
-    var repo = regex[3];
-    var http = new XMLHttpRequest();
+    let website = regex[1];
+    let author = regex[2];
+    let repo = regex[3];
+    let http = new XMLHttpRequest();
     http.onreadystatechange = function() {
         if (this.readyState == 4) {
             if (this.status == 200) {
@@ -78,38 +68,29 @@ function getCommit(url) {
                     return;
                 }
                 json.forEach(function(elem) {
-                    addName(elem[2], elem[0]);
-                });
-                mailToName.forEach(function(elem) {
-                    elem.sort(function(a, b) {
-                        if (a > b) return 1;
-                        else return -1;
-                    })
-                });
-                json.forEach(function(elem) {
-                    var name = Object.keys(mailToName[elem[2]])[0];
-                    result += "<tr><td>" + name + '</td><td><a id="commitLink" href="' + elem[3] + '">' + escapeHtml(elem[1]) + '</a></td><td>';
-                    if (!elem[4][0]) {
+                    let name = elem[0];
+                    result += "<tr><td>" + name + '</td><td><a id="commitLink" href="' + elem[2] + '">' + elem[1] + '</a></td><td>';
+                    if (!elem[3][0]) {
                         result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#separate">Rule 1</a> ';
                         increaseBrokenRule(brokenRules, name);
                     }
-                    if (!elem[4][1]) {
+                    if (!elem[3][1]) {
                         result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#limit-50">Rule 2</a> ';
                         increaseBrokenRule(brokenRules, name);
                     }
-                    if (!elem[4][2]) {
+                    if (!elem[3][2]) {
                         result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#capitalize">Rule 3</a> ';
                         increaseBrokenRule(brokenRules, name);
                     }
-                    if (!elem[4][3]) {
+                    if (!elem[3][3]) {
                         result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#end">Rule 4</a> ';
                         increaseBrokenRule(brokenRules, name);
                     }
-                    if (!elem[4][4]) {
+                    if (!elem[3][4]) {
                         result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#imperative">Rule 5</a> ';
                         increaseBrokenRule(brokenRules, name);
                     }
-                    if (!elem[4][5]) {
+                    if (!elem[3][5]) {
                         result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#wrap-72">Rule 6</a> ';
                         increaseBrokenRule(brokenRules, name);
                     }
