@@ -61,7 +61,7 @@ function getCommit(url) {
     resultElement.innerHTML = "Loading, please wait...";
     var regex = /http[s]?:\/\/(github|gitlab).com\/([ 'a-zA-Z0-9_-]+)\/([ 'a-zA-Z0-9_-]+)/.exec(url);
     if (regex == null || regex.length != 4) {
-        displayError("This URL isn't a valid GitHub/GitLab URL.");
+        displayError("This isn't a valid GitHub/GitLab URL.");
         return;
     }
     var website = regex[1];
