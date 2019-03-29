@@ -67,6 +67,7 @@
                 }
             } else {
                 $mailToName[$commitEmail] = array();
+                $mailToName[$commitEmail][$commitName] = 1;
             }
             $lines = explode(PHP_EOL, $commitMsg);
             $subjectLine = $lines[0];
