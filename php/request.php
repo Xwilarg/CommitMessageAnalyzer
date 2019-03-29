@@ -20,6 +20,9 @@
     if (!$isGithub) {
         $domaineName = $matches[2];
     }
+    $http = $matches[1];
+    if ($http === "")
+        $http = "http://";
     $author = $matches[3];
     $repo = $matches[4];
     $array = array();
@@ -46,13 +49,15 @@
                 $commitName = $elem['commit']['author']['name'];
                 $commitEmail = $elem['commit']['author']['email'];
                 $commitUrl = $elem['html_url'];
+                $authorUrl = $elem['author']['html_url'];
             }
             else
             {
                 $commitMsg = $elem['title'];
                 $commitName = $elem['author_name'];
                 $commitEmail = $elem['author_email'];
-                $commitUrl = "https://gitlab.com/" . $author . '/' . $repo . "/commit/" . $elem['id'];
+                $commitUrl = $http . $domaineName . "/" . $author . '/' . $repo . "/commit/" . $elem['id'];
+                $authorUrl = $http . $domaineName . "/" . $author;
             }
             if (array_key_exists($commitEmail, $mailToName)) {
                 if (array_key_exists($commitName, $mailToName[$commitEmail])) {
@@ -74,14 +79,14 @@
             }
             else
                 array_push($rule, true, true, true, true, true, true, true);
-            array_push($array, array($commitEmail, preg_replace($patterns, $replacements, $commitMsg), $commitUrl, $rule));
+            array_push($array, array($commitEmail, preg_replace($patterns, $replacements, $commitMsg), $commitUrl, $authorUrl, $rule));
         }
         $page += 1;
     } while (count($commits) == 100 && $page <= 5);
 
     $finalArray = array();
     foreach ($array as $i) {
-        array_push($finalArray, array(key($mailToName[$i[0]]), $i[1], $i[2], $i[3]));
+        array_push($finalArray, array(key($mailToName[$i[0]]), $i[1], $i[2], $i[3], $i[4]));
     }
 
     echo(json_encode([$finalArray, $page <= 5]));

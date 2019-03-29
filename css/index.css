@@ -18,11 +18,11 @@ th {
     color: white;
 }
 
-td {
+#message {
     font-size: 80%;
 }
 
-td:first-line {
+#message:first-line {
     font-size: 125%;
 }
 
