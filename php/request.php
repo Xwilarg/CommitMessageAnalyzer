@@ -11,7 +11,17 @@
     $verbs = explode(PHP_EOL, file_get_contents("verbs.txt"));
 
     $page = 1;
-    $isGithub = $_GET['website'] === "github";
+    preg_match('/^(https?:\/\/)?([^\/]+)\/([^\/]+)\/([^\/]+)/', $_GET['url'], $matches);
+    if (count($matches) === 0) {
+        echo("{}");
+        return;
+    }
+    $isGithub = $matches[2] === "github.com";
+    if (!$isGithub) {
+        $domaineName = $matches[2];
+    }
+    $author = $matches[3];
+    $repo = $matches[4];
     $array = array();
     $mailToName = array();
     $patterns = array();
@@ -22,9 +32,9 @@
     do
     {
         if ($isGithub)
-            $url = 'https://api.github.com/repos/' . $_GET['author'] . '/' . $_GET['repo'] . '/commits?access_token=' . $token . '&';
+            $url = 'https://api.github.com/repos/' . $author . '/' . $repo . '/commits?access_token=' . $token . '&';
         else
-            $url = 'https://gitlab.com/api/v4/projects/' . urlencode($_GET['author'] . '/' . $_GET['repo']) . '/repository/commits?';
+            $url = 'https://' . $domaineName . '/api/v4/projects/' . urlencode($author . '/' . $repo) . '/repository/commits?';
         $url .= "per_page=100&page=" . $page;
         $commits = json_decode(file_get_contents($url, false, $context));
         foreach ($commits as $i) {
@@ -42,7 +52,7 @@
                 $commitMsg = $elem['title'];
                 $commitName = $elem['author_name'];
                 $commitEmail = $elem['author_email'];
-                $commitUrl = "https://gitlab.com/" . $_GET['author'] . '/' . $_GET['repo'] . "/commit/" . $elem['id'];
+                $commitUrl = "https://gitlab.com/" . $author . '/' . $repo . "/commit/" . $elem['id'];
             }
             if (array_key_exists($commitEmail, $mailToName)) {
                 if (array_key_exists($commitName, $mailToName[$commitEmail])) {

@@ -49,14 +49,6 @@ function getCommit(url) {
     let resultElement = document.getElementsByClassName("result")[0];
     resultElement.className = "result";
     resultElement.innerHTML = "Loading, please wait...";
-    let regex = /http[s]?:\/\/(github|gitlab).com\/([ 'a-zA-Z0-9_-]+)\/([ 'a-zA-Z0-9_-]+)/.exec(url);
-    if (regex == null || regex.length != 4) {
-        displayError("This isn't a valid GitHub/GitLab URL.");
-        return;
-    }
-    let website = regex[1];
-    let author = regex[2];
-    let repo = regex[3];
     let http = new XMLHttpRequest();
     http.onreadystatechange = function() {
         if (this.readyState == 4) {
@@ -109,6 +101,6 @@ function getCommit(url) {
             }
         }
     };
-    http.open("GET", "php/request.php?author=" + author + "&repo=" + repo + "&website=" + website, true);
+    http.open("GET", "php/request.php?url=" + url, true);
     http.send();
 }
