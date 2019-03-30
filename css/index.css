@@ -80,3 +80,8 @@ input {
     text-align: right;
     margin-left: auto;
 }
+
+#errorChart, #ratioChart {
+    width: 450px;
+    height: 250px;
+}

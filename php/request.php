@@ -112,11 +112,19 @@
     }
 
     $finalArrayStats = array();
+    $total = 0;
     foreach ($statsName as $key => $value) {
-        array_push($finalArrayStats, array(key($mailToName[$key]), $value[0], $value[1]));
+        $ratio = $value[0];
+        foreach ($statsName as $key2 => $value2) {
+            if ($key !== $key2) {
+                $ratio *= $value2[1];
+            }
+        }
+        $total += $ratio;
+        array_push($finalArrayStats, array(key($mailToName[$key]), $value[0], $ratio));
     }
 
-    echo(json_encode([$finalArrayCommit, $finalArrayStats, $page <= 5]));
+    echo(json_encode([$finalArrayCommit, $finalArrayStats, $total, $page <= 5]));
 
     function checkRule1($subjectLine, $verbs, $otherLines) { // Separate subject from body with a blank line
         if (count($otherLines) == 0)

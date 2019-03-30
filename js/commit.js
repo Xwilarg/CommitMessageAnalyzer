@@ -6,24 +6,39 @@ function analyze() {
     getCommit(document.getElementById("url").value);
 }
 
-function drawChart()
+function drawCharts()
 {
-    let array = new Array();
-    array.push(new Array());
-    array[0].push("Names");
-    array[0].push("Errors");
+    let arrayError = new Array();
+    let arrayRatio = new Array();
+    arrayError.push(new Array());
+    arrayError[0].push("Names");
+    arrayError[0].push("Errors");
+    arrayRatio.push(new Array());
+    arrayRatio[0].push("Names");
+    arrayRatio[0].push("Errors");
     let i = 1;
     for (let elem in allStats) {
-        array.push(new Array());
-        array[i].push(allStats[elem][0]);
-        array[i].push(allStats[elem][1]);
+        arrayError.push(new Array());
+        arrayError[i].push(allStats[elem][0]);
+        arrayError[i].push(allStats[elem][1]);
+        arrayRatio.push(new Array());
+        arrayRatio[i].push(allStats[elem][0]);
+        arrayRatio[i].push(allStats[elem][2]);
         i++;
     }
-    let data = google.visualization.arrayToDataTable(array);
+    let data = google.visualization.arrayToDataTable(arrayError);
     let options = {
-        title: "Error per members"
+        backgroundColor: "#EEE",
+        title: "Error per members (sum)"
     };
     let chart = new google.visualization.PieChart(document.getElementById("errorChart"));
+    chart.draw(data, options);
+    data = google.visualization.arrayToDataTable(arrayRatio);
+    options = {
+        backgroundColor: "#EEE",
+        title: "Error per members (ratio error/commit)"
+    };
+    chart = new google.visualization.PieChart(document.getElementById("ratioChart"));
     chart.draw(data, options);
 }
 
@@ -78,10 +93,10 @@ function getCommit(url) {
                     result = result.replace(new RegExp('\n', 'g'), '<br/>');
                     result += "</td></tr>";
                 });
-                resultElement.innerHTML = '<div id="errorChart"></div>'
+                resultElement.innerHTML = '<table><tr><td><div id="errorChart"></div></td><td><div id="ratioChart"></div></td></tr></table>'
                 google.charts.load('current', {'packages':['corechart']});
-                google.charts.setOnLoadCallback(drawChart);
-                if (!tmpJson[2])
+                google.charts.setOnLoadCallback(drawCharts);
+                if (!tmpJson[3])
                     result += "<strong>Warning: Only the 500 firsts commits were analysed.</strong>";
                 resultElement.innerHTML += "<br/>" + intro + result + "</table>";
             }
