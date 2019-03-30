@@ -34,14 +34,12 @@ function drawChart()
 var intro = "<table><tr><th>Date time (UTC)</th><th>Author</th><th>Commit</th><th>Result</th></tr>";
 var result = "";
 var brokenRules = {};
-var mailToName = [];
 
 function displayError(message) {
     let htmlElement = document.getElementsByClassName("result")[0];
     htmlElement.className += " error";
     htmlElement.innerHTML = message;
 }
-
 
 function getCommit(url) {
     result = "";
