@@ -6,10 +6,6 @@ function analyze() {
     getCommit(document.getElementById("url").value);
 }
 
-function increaseBrokenRule(brokenRules, name) {
-    brokenRules[name] = (brokenRules[name] || 0) + 1;
-}
-
 function drawChart()
 {
     let array = new Array();
@@ -17,10 +13,10 @@ function drawChart()
     array[0].push("Names");
     array[0].push("Errors");
     let i = 1;
-    for (var key in brokenRules) {
+    for (let elem in allStats) {
         array.push(new Array());
-        array[i].push(key);
-        array[i].push(brokenRules[key]);
+        array[i].push(allStats[elem][0]);
+        array[i].push(allStats[elem][1]);
         i++;
     }
     let data = google.visualization.arrayToDataTable(array);
@@ -33,7 +29,7 @@ function drawChart()
 
 var intro = "<table><tr><th>Date time (UTC)</th><th>Author</th><th>Commit</th><th>Result</th></tr>";
 var result = "";
-var brokenRules = {};
+var allStats;
 
 function displayError(message) {
     let htmlElement = document.getElementsByClassName("result")[0];
@@ -52,37 +48,32 @@ function getCommit(url) {
         if (this.readyState == 4) {
             if (this.status == 200) {
                 let tmpJson = JSON.parse(this.responseText);
-                let json = tmpJson[0];
-                if (json.length == 0) {
+                let jsonCommit = tmpJson[0];
+                allStats = tmpJson[1];
+                if (jsonCommit.length == 0) {
                     displayError("This repository doesn't exist.");
                     return;
                 }
-                json.forEach(function(elem) {
+                jsonCommit.forEach(function(elem) {
                     let name = elem[0];
                     result += "<tr><td>" + elem[1] + "</td><td>" + '<a id="commitLink" href="' + elem[4] + '">' + name + '</td><td><a id="commitLink" href="' + elem[3] + '"><nav id="message">' + elem[2] + '</nav></a></td><td>';
                     if (!elem[5][0]) {
                         result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#separate">Rule 1</a> ';
-                        increaseBrokenRule(brokenRules, name);
                     }
                     if (!elem[5][1]) {
                         result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#limit-50">Rule 2</a> ';
-                        increaseBrokenRule(brokenRules, name);
                     }
                     if (!elem[5][2]) {
                         result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#capitalize">Rule 3</a> ';
-                        increaseBrokenRule(brokenRules, name);
                     }
                     if (!elem[5][3]) {
                         result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#end">Rule 4</a> ';
-                        increaseBrokenRule(brokenRules, name);
                     }
                     if (!elem[5][4]) {
                         result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#imperative">Rule 5</a> ';
-                        increaseBrokenRule(brokenRules, name);
                     }
                     if (!elem[5][5]) {
                         result += '<a target="_blank" href="https://chris.beams.io/posts/git-commit/#wrap-72">Rule 6</a> ';
-                        increaseBrokenRule(brokenRules, name);
                     }
                     result = result.replace(new RegExp('\n', 'g'), '<br/>');
                     result += "</td></tr>";
@@ -90,7 +81,7 @@ function getCommit(url) {
                 resultElement.innerHTML = '<div id="errorChart"></div>'
                 google.charts.load('current', {'packages':['corechart']});
                 google.charts.setOnLoadCallback(drawChart);
-                if (!tmpJson[1])
+                if (!tmpJson[2])
                     result += "<strong>Warning: Only the 500 firsts commits were analysed.</strong>";
                 resultElement.innerHTML += "<br/>" + intro + result + "</table>";
             }
