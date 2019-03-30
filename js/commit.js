@@ -29,14 +29,17 @@ function drawCharts()
     let data = google.visualization.arrayToDataTable(arrayError);
     let options = {
         backgroundColor: "#EEE",
-        title: "Error per members (sum)"
+        title: "Error per members (sum of invalid commits)"
     };
     let chart = new google.visualization.PieChart(document.getElementById("errorChart"));
     chart.draw(data, options);
     data = google.visualization.arrayToDataTable(arrayRatio);
     options = {
         backgroundColor: "#EEE",
-        title: "Error per members (ratio error/commit)"
+        title: "Error per members\n(ratio per user of invalid commit / nb of commits)",
+        tooltip: {
+            text: "percentage"
+        }
     };
     chart = new google.visualization.PieChart(document.getElementById("ratioChart"));
     chart.draw(data, options);
