@@ -11,11 +11,12 @@
     $verbs = explode(PHP_EOL, file_get_contents("verbs.txt"));
 
     $page = 1;
-    preg_match('/^(https?:\/\/)?([^\/]+)\/([^\/]+)\/([^\/]+)/', $_GET['url'], $matches);
+    preg_match('/^(https?:\/\/)?([^\/]+)\/([^\/]+)\/([^\/]+)(\/(tree|blob)\/([^\/]+))?/', $_GET['url'], $matches);
     if (count($matches) === 0) {
         echo("{}");
         return;
     }
+    $branch = count($matches) === 8 ? $matches[7] : "";
     $isGithub = $matches[2] === "github.com";
     if (!$isGithub) {
         $domaineName = $matches[2];
@@ -36,9 +37,9 @@
     do
     {
         if ($isGithub)
-            $url = 'https://api.github.com/repos/' . $author . '/' . $repo . '/commits?access_token=' . $token . '&';
+            $url = 'https://api.github.com/repos/' . $author . '/' . $repo . '/commits?access_token=' . $token . '&sha=' . $branch . '&';
         else
-            $url = 'https://' . $domaineName . '/api/v4/projects/' . urlencode($author . '/' . $repo) . '/repository/commits?';
+            $url = 'https://' . $domaineName . '/api/v4/projects/' . urlencode($author . '/' . $repo) . '/repository/commits?' . ($branch !== "" ? 'ref_name=' . $branch . '&' : "");
         $url .= "per_page=100&page=" . $page;
         $commits = json_decode(file_get_contents($url, false, $context));
         foreach ($commits as $i) {
