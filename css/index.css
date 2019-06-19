@@ -61,6 +61,10 @@ input {
     margin-right: 5px;
 }
 
+input#url {
+    width: 300px;
+}
+
 .result {
     display: flex;
     flex-direction: column;
