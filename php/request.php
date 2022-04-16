@@ -1,5 +1,4 @@
 <?php
-    $token = file_get_contents('token.dat');
     $options = [
         "http" => [
             "method" => "GET",
@@ -37,7 +36,7 @@
     do
     {
         if ($isGithub)
-            $url = 'https://api.github.com/repos/' . $author . '/' . $repo . '/commits?access_token=' . $token . '&sha=' . $branch . '&';
+            $url = 'https://api.github.com/repos/' . $author . '/' . $repo . '/commits?sha=' . $branch . '&';
         else
             $url = 'https://' . $domaineName . '/api/v4/projects/' . urlencode($author . '/' . $repo) . '/repository/commits?' . ($branch !== "" ? 'ref_name=' . $branch . '&' : "");
         $url .= "per_page=100&page=" . $page;
